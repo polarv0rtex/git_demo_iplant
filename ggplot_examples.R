@@ -70,6 +70,55 @@ ggplot(d2) + geom_point(aes(x = carat, y = price, color = color))
 library(MASS)
 ggplot(birthwt, aes(factor(race), bwt)) + geom_boxplot()
 
+# Section 6. Facets
+# creates lattice plots
+# single column, multiple rows
+ggplot(iris, aes(Sepal.Length, Sepal.Width, color = Species)) +
+  geom_point() +
+  facet_grid(Species ~ .)
 
+# a different way to look at this
+ggplot(iris, aes(Sepal.Length, Sepal.Width, color = Species)) +
+  geom_point() +
+  facet_grid(. ~ Species)
 
+# trying that with facet wrap
+# wrap will do it's best to naturally fill the space with plots
+ggplot(iris, aes(Sepal.Length, Sepal.Width, color = Species)) +
+  geom_point(size = 5) +
+  facet_wrap(~ Species) # notice the lack of "."
 
+# Section 7. Scales
+library(RColorBrewer)
+display.brewer.all()
+
+#using a color brewer palette
+library(reshape2)
+# melt the data
+df <- melt(iris, id.vars = "Species")
+# recast the data
+ggplot(df, aes(Species, value, fill = variable)) +
+  geom_bar(stat = "identity", position = "dodge") + 
+  # dodge = nested bar plot, without this, they will get stacked up
+  scale_fill_brewer(palette = "Set5")
+
+# trying out some different things here
+ggplot(df, aes(variable, value, fill = Species)) +
+  geom_bar(stat = "identity", position = "dodge") + 
+  scale_fill_brewer(palette = "Set3")
+
+# pick your own colors: i want hue
+# adding a continous scale to an axis
+ggplot(birthwt, aes(factor(race), bwt)) + 
+  geom_boxplot(width = .2) +
+  scale_y_continuous(labels = (paste0(1:4, " Kg")),
+                     breaks = seq(1000, 4000, by = 1000))
+
+# Section ... 8? Coordinates
+# ggplots does not make pie charts b/c it was written by statisticians
+
+# Section 9 ... other things you can do
+# histograms, line charts, create a line chart in three lines of code 
+# create a "geom ribbon" to show confidence
+
+# good to know about themes
